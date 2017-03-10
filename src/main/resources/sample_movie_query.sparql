@@ -1,0 +1,9 @@
+PREFIX schema: <http://schema.org/>
+PREFIX Movie: <http://schema.org/Movie/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?r
+{?r rdf:type schema:Movie .
+?r schema:aggregateRating ?rating .
+?rating  <http://schema.org/AggregateRating/reviewCount> ?ratingCount .
+FILTER (?ratingCount > 10)
+}

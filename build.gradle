@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'scala'
+    id "com.github.maiflai.scalatest" version "0.15"
+    id 'idea'
+    id 'net.ltgt.apt' version "0.9"
+}
+
+apply from: rootProject.file('gradle/install-git-hooks.gradle')
+
+group 'mlworkshop'
+version '0.1'
+description = """Semantic data store and Machine learning workshop"""
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala', 'src/main/java']
+        }
+    }
+}
+
+//test {
+//    // set heap size for the test JVM(s)
+//    minHeapSize = "512m"
+//    maxHeapSize = "1g"
+//    maxParallelForks = 4
+//}
+
+test {
+    minHeapSize = "512m"
+    maxHeapSize = "1g"
+    tags {
+        exclude 'integrationTest'
+    }
+}
+
+repositories {
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://maven.twttr.com" }
+    maven { url 'https://jitpack.io' }
+    maven { url 'http://dl.bintray.com/spark-packages/maven' }
+    flatDir {
+        dirs "./libs"
+    }
+}
+
+dependencies {
+    //Scala dependencies
+    compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.4'
+    compile 'net.codingwell:scala-guice_2.11:4.1.0'
+    compile group: 'org.scalactic', name: 'scalactic_2.11', version: '3.0.0'
+    //DevTools
+    apt "org.projectlombok:lombok:1.16.10"
+    compile(group: 'org.projectlombok', name: 'lombok', version: '1.16.10')
+    //Triplestore dependencies
+    compile 'org.apache.jena:apache-jena-libs:3.1.0'
+    // Misc
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.9'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.9'
+    compile group: 'org.jooq', name: 'jool', version: '0.9.11'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile 'com.google.guava:guava:19.0'
+    compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.0'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.8'
+    compile group: 'com.twitter', name: 'storehaus-cache_2.11', version: '0.11.1'
+    //test dependencies
+    testCompile group: 'org.scalatest', name: 'scalatest_2.11', version: '3.0.1'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.0.53-beta'
+    testCompile group: 'com.github.javafaker', name: 'javafaker', version: '0.12'
+    testRuntime 'org.pegdown:pegdown:1.6.0'
+
+}
+
+clean.dependsOn installGitHooks
+
