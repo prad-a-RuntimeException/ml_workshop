@@ -3,7 +3,7 @@ package moviestore.input
 import java.io.InputStream
 
 import moviestore.AppResource
-import moviestore.db.triplestore.FileBasedTripleStoreDAO
+import moviestore.db.triplestore.{FileBasedTripleStoreDAO, GraphVisitor, MovieApi}
 import moviestore.misc.{ResourceLoader, S3FileReader}
 import org.apache.jena.ext.com.google.common.io.Resources
 import org.apache.jena.rdf.model.Resource

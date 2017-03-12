@@ -1,26 +1,25 @@
-package moviestore.input
+package moviestore.db.triplestore
 
-import java.io.{File, FileOutputStream, InputStream}
+import java.io.InputStream
 import javax.inject.{Inject, Named}
 
-import moviestore.db.triplestore.TripleStoreDAO
 import org.apache.jena.rdf.model.Resource
 import org.apache.jena.riot.Lang
-
-import scala.collection.JavaConverters._
 
 class MovieApi @Inject()(tripleStoreDAO: TripleStoreDAO,
                          @Named("schemaMoviesStream") schemaMoviesStream: InputStream
                          , @Named("movieLensStream") movieLensStream: InputStream) {
 
   def load(forceCreate: Boolean) {
-    if (forceCreate) tripleStoreDAO.delete(true)
+    if (forceCreate) {
+      tripleStoreDAO.delete(true)
+    }
     tripleStoreDAO.populateNquad(schemaMoviesStream)
     tripleStoreDAO.populate(movieLensStream, Lang.N3)
   }
 
   def getMovieData: Iterator[Resource] = {
-    return tripleStoreDAO.getResource("http://schema.org/Movie").asScala
+    tripleStoreDAO.resources("http://schema.org/Movie")
   }
 
   def getMovieData(resourceFilter: (Resource) => Boolean = (res) => true): Seq[Resource] = {

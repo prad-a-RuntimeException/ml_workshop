@@ -1,5 +1,4 @@
-package moviestore.input
-
+package moviestore.db.triplestore
 
 import java.util
 
@@ -113,13 +112,28 @@ object GraphVisitor {
 
   private def createVertex(resource: Resource, propertyList: Seq[Statement]) = {
 
+    def cleanupParameter(originalParameter: (String, AnyRef)): (String, AnyRef) = {
+
+
+      def sanitizeName(name: String): String = {
+        val stopChars = "&,.:;'[]-".toSet
+        name.filterNot(stopChars).trim
+      }
+
+       originalParameter._1.toLowerCase() match {
+        case "name" => originalParameter._1 -> sanitizeName(originalParameter._2.asInstanceOf[String])
+        case _ => originalParameter._1 -> originalParameter._2
+      }
+
+    }
+
 
     val propertyValue: Map[String, AnyRef] = propertyList
       .map(stmt => (stmt.getPredicate.getLocalName, stmt.getObject.asLiteral().getValue))
       .filter((tuple: (String, AnyRef)) => tuple._1 != null && tuple._2 != null)
       .groupBy(tuple => tuple._1)
       .map(tuple => tuple._1 -> tuple._2.map(predVal => predVal._2))
-      .map(tuple => if (tuple._2.size > 1) tuple._1 -> tuple._2.toList else tuple._1 -> tuple._2.head)
+      .map(tuple => if (tuple._2.size > 1) tuple._1 -> tuple._2.toList else cleanupParameter(tuple._1 ,tuple._2.head))
 
     new Vertex(getResourceID(resource), getResourceType(resource), propertyValue)
   }

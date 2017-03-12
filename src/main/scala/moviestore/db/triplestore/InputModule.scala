@@ -1,23 +1,26 @@
-package moviestore.input
+package moviestore.db.triplestore
 
 import java.io.InputStream
+import java.nio.file.Files._
+import java.nio.file.Paths.get
+import java.nio.file.StandardOpenOption.READ
 
+import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import moviestore.db.triplestore.{FileBasedTripleStoreDAO, TripleStoreDAO}
-import moviestore.misc.{ResourceLoader, S3FileReader}
-import moviestore.{AppResource, CommonModule}
+import moviestore.misc.ResourceLoader
+import moviestore.AppResource
+import net.codingwell.scalaguice.ScalaModule
 
 object InputModule {
-  private val bucketName: String = ResourceLoader(AppResource.TriplestoreResource, "s3_bucket").get
   private val schemaMovieFile: String = ResourceLoader(AppResource.TriplestoreResource, "schema_movie_file").get
   private val movieLensFile: String = ResourceLoader(AppResource.TriplestoreResource, "movielens_file").get
 
 
-  private lazy val schemaMoviesStream = S3FileReader.readData(bucketName, schemaMovieFile)
-  private lazy val movieLensStream = S3FileReader.readData(bucketName, movieLensFile)
+  private lazy val schemaMoviesStream = newInputStream(get(schemaMovieFile), READ)
+  private lazy val movieLensStream = newInputStream(get(movieLensFile), READ)
 }
 
-class InputModule extends CommonModule {
+class InputModule  extends AbstractModule with ScalaModule {
   override protected def configure() {
     super.configure()
     bind(classOf[TripleStoreDAO]).to(classOf[FileBasedTripleStoreDAO])
