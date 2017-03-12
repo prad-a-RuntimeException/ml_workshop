@@ -54,7 +54,7 @@ class FileBasedTripleStoreDAO(val datasetName: String) extends TripleStoreDAO {
 
   def populate(datasetStream: InputStream, lang: Lang) {
     try {
-      val sink: StreamRDF = new BatchedStreamRDF(QuadsBatchHandler.createStreamBatchHandler(quadConsumer))
+      val sink: StreamRDF = new BatchedStreamRDF(QuadsBatchHandler.apply(quadConsumer))
       RDFDataMgr.parse(sink, datasetStream, lang)
     }
     catch {
@@ -67,7 +67,7 @@ class FileBasedTripleStoreDAO(val datasetName: String) extends TripleStoreDAO {
 
   def populateNquad(datasetStream: InputStream) {
     try {
-      val sink: StreamRDF = new BatchedStreamRDF(QuadsBatchHandler.createStreamBatchHandler(quadConsumer))
+      val sink: StreamRDF = new BatchedStreamRDF(QuadsBatchHandler(quadConsumer))
       CustomRDFDataMgr.parse(sink, datasetStream, LenientNquadParser.LANG)
     }
     catch {

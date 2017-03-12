@@ -21,7 +21,7 @@ class MovieApiIntegrationTest extends FunSuite with Matchers with BeforeAndAfter
 
   test("Should load movies from nquad data") {
     movieApi.load(true)
-    val movieData: Seq[Resource] = movieApi.getMovieData()
+    val movieData: Iterator[Resource] = movieApi.getMovieData()
     movieData.size should be > 1
 
     movieData

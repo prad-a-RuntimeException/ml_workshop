@@ -22,7 +22,7 @@ class MovieApi @Inject()(tripleStoreDAO: TripleStoreDAO,
     tripleStoreDAO.resources("http://schema.org/Movie")
   }
 
-  def getMovieData(resourceFilter: (Resource) => Boolean = (res) => true): Seq[Resource] = {
-    return getMovieData.toSeq.filter(resourceFilter(_))
+  def getMovieData(resourceFilter: (Resource) => Boolean = (res) => true): Iterator[Resource] = {
+     getMovieData.filter(resourceFilter(_))
   }
 }

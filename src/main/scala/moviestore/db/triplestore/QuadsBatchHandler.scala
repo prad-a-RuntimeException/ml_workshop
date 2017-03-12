@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory.getLogger
 import scala.collection.JavaConverters._
 
 object QuadsBatchHandler {
-  def createStreamBatchHandler(quadFn: (Quad) => Unit): QuadsBatchHandler = {
-    return new QuadsBatchHandler(quadFn)
+  def apply(quadFn: (Quad) => Unit): QuadsBatchHandler = {
+    new QuadsBatchHandler(quadFn)
   }
 
   val MOVIE_FILTER: List[String] = List("www.imdb.com")
@@ -34,7 +34,7 @@ class QuadsBatchHandler(val quadConsumer: (Quad) => Unit) extends StreamRDFBatch
   def batchQuads(currentGraph: Node, currentSubject: Node, quads: util.List[Quad]) {
     val uri: String = currentGraph.getURI.toLowerCase
     if (QuadsBatchHandler.filterByUrl(uri)) {
-//      LOGGER.trace("For graph {} and subject {}, found quads  {}", currentGraph, currentSubject, quads.size)
+      //      LOGGER.trace("For graph {} and subject {}, found quads  {}", currentGraph, currentSubject, quads.size)
       quads.asScala.foreach(quadConsumer)
     }
   }

@@ -7,8 +7,8 @@ import java.nio.file.StandardOpenOption.READ
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import moviestore.misc.ResourceLoader
 import moviestore.AppResource
+import moviestore.misc.ResourceLoader
 import net.codingwell.scalaguice.ScalaModule
 
 object InputModule {
@@ -20,9 +20,8 @@ object InputModule {
   private lazy val movieLensStream = newInputStream(get(movieLensFile), READ)
 }
 
-class InputModule  extends AbstractModule with ScalaModule {
+class InputModule extends AbstractModule with ScalaModule {
   override protected def configure() {
-    super.configure()
     bind(classOf[TripleStoreDAO]).to(classOf[FileBasedTripleStoreDAO])
     bind(classOf[String]).annotatedWith(Names.named("datasetName")).toInstance("movies")
     bind(classOf[InputStream]).annotatedWith(Names.named("schemaMoviesStream")).toInstance(InputModule.schemaMoviesStream)

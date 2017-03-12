@@ -15,9 +15,8 @@ object TripleStoreEntryPoint {
     inputModule.getInstance(classOf[MovieApi]).load(true)
   }
 
-  def readData(): Seq[Resource] = {
-    val movies: Seq[Resource] = inputModule.getInstance(classOf[MovieApi]).getMovieData()
-    movies
+  def readData(): Iterator[Resource] = {
+    inputModule.getInstance(classOf[MovieApi]).getMovieData()
   }
 
 }
